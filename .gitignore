@@ -1,2 +1,6 @@
 # Mac OS:
 *.xls
+
+#Python
+*.pyc
+
