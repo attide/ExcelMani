@@ -100,49 +100,51 @@ def resXlwt(result_list_p01,result_list_p23):
     book.save(OUTPUT_XLS)
     print 'Sheet Result has bee added'
 
+def main(file_name):
+    priority_idx = getIdx(file_name, PRIORITY)
+    start_time_idx = getIdx(file_name, START_TIME)
+    solved_time_idx = getIdx(file_name, SOLVED_TIME)
+    bug_id_idx = getIdx(file_name, BUG_ID)
+    title_idx = getIdx(file_name,TITLE)
+    owner_idx = getIdx(file_name,OWNER)
+    resolution_idx = getIdx(file_name,RESOLUTION)
+    content = getContent(file_name)
+    # 删除'Not a bug'的行
+    bug_list = []
+    for row_i in content:
+        if row_i[resolution_idx] == NOT_A_BUG:
+            pass
+        else:
+            bug_list.append(row_i)
+    # print len(bug_list)
+    subtitle = [BUG_ID,TITLE,OWNER,PRIORITY,START_TIME,SOLVED_TIME,TIME_DIFF]
+    result_list_p01 = []
+    result_list_p01.append(subtitle)
+    result_list_p23 = []
+    result_list_p23.append(subtitle)
+    for row_i in bug_list:
+        start_time_val = getDatetimeVal(row_i[start_time_idx],file_name)
+        end_time_val = getDatetimeVal(row_i[solved_time_idx],file_name)
+        time_diff_val = (end_time_val-start_time_val).total_seconds()/(60*60)
+        if (row_i[priority_idx] in (P2_PRIORITY,P3_PRIORITY) and time_diff_val >= 24):
+        # if True:
+            res_row = [row_i[bug_id_idx],row_i[title_idx],row_i[owner_idx],row_i[priority_idx],
+                str(start_time_val),
+                str(end_time_val),
+                int(time_diff_val)]
+            result_list_p23.append(res_row)
+        if (row_i[priority_idx] in (P0_PRIORITY,P1_PRIORITY) and time_diff_val >= 8):
+            res_row = [row_i[bug_id_idx],row_i[title_idx],row_i[owner_idx],row_i[priority_idx],
+                str(start_time_val),
+                str(end_time_val),
+                int(time_diff_val)]
+            result_list_p01.append(res_row)
+    resXlwt(result_list_p01,result_list_p23)
+
 if __name__ == '__main__':
     args = sys.argv
     if len(args) == 2:
         file_name = args[1].decode('utf-8')
-        priority_idx = getIdx(file_name, PRIORITY)
-        start_time_idx = getIdx(file_name, START_TIME)
-        solved_time_idx = getIdx(file_name, SOLVED_TIME)
-        bug_id_idx = getIdx(file_name, BUG_ID)
-        title_idx = getIdx(file_name,TITLE)
-        owner_idx = getIdx(file_name,OWNER)
-        resolution_idx = getIdx(file_name,RESOLUTION)
-        content = getContent(file_name)
-        # 删除'Not a bug'的行
-        bug_list = []
-        for row_i in content:
-            if row_i[resolution_idx] == NOT_A_BUG:
-                pass
-            else:
-                bug_list.append(row_i)
-        # print len(bug_list)
-        subtitle = [BUG_ID,TITLE,OWNER,PRIORITY,START_TIME,SOLVED_TIME,TIME_DIFF]
-        result_list_p01 = []
-        result_list_p01.append(subtitle)
-        result_list_p23 = []
-        result_list_p23.append(subtitle)
-        for row_i in bug_list:
-            start_time_val = getDatetimeVal(row_i[start_time_idx],file_name)
-            end_time_val = getDatetimeVal(row_i[solved_time_idx],file_name)
-            time_diff_val = (end_time_val-start_time_val).total_seconds()/(60*60)
-            if (row_i[priority_idx] in (P2_PRIORITY,P3_PRIORITY) and time_diff_val >= 24):
-            # if True:
-                res_row = [row_i[bug_id_idx],row_i[title_idx],row_i[owner_idx],row_i[priority_idx],
-                    str(start_time_val),
-                    str(end_time_val),
-                    int(time_diff_val)]
-                result_list_p23.append(res_row)
-            if (row_i[priority_idx] in (P0_PRIORITY,P1_PRIORITY) and time_diff_val >= 8):
-                res_row = [row_i[bug_id_idx],row_i[title_idx],row_i[owner_idx],row_i[priority_idx],
-                    str(start_time_val),
-                    str(end_time_val),
-                    int(time_diff_val)]
-                result_list_p01.append(res_row)
-        resXlwt(result_list_p01,result_list_p23)
-
+        main(file_name)
     else:
         print 'Invalid arguments'

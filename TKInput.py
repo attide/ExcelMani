@@ -4,6 +4,7 @@
 from Tkinter import *
 import tkMessageBox
 import ExcelMani
+import Statistic
 
 class Application(Frame):
     def __init__(self, master=None):
@@ -22,6 +23,7 @@ class Application(Frame):
     def generateXls(self):
         name = self.nameInput.get()
         ExcelMani.main(name)
+        Statistic.main(name)
 
 def main():
     app = Application()

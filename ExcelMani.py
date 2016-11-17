@@ -26,7 +26,7 @@ MODULE_DIS = u'模块分布'
 
 NOT_A_BUG = u'Not a Bug'
 
-OUTPUT_XLS = 'v4_res.xls'
+OUTPUT_XLS = 'v3_res.xls'
 
 def getIdx(first_row,key):
     if key in first_row:
@@ -60,6 +60,8 @@ def getDateStr(date_val,bk):
     return str(date_key)
 
 def countCol(target_col):
+    if target_col == []:
+        return
     result = {}
     for vals in target_col:
         if vals not in result:
@@ -68,6 +70,8 @@ def countCol(target_col):
     return result
 
 def mergeDate(start_list,solved_list):
+    if start_list == [] or solved_list == []:
+        return
     result = {}
     for vals in start_list:
         if vals not in result:
@@ -80,7 +84,7 @@ def mergeDate(start_list,solved_list):
     return result
 
 def comXlwt(book, dic, key):
-    if(dic is None):
+    if dic is None:
         return
     sheet1 = book.add_sheet(key,cell_overwrite_ok=True)
     sheet1.write(0,0,key)
@@ -151,13 +155,19 @@ def main(file_name):
         if row_data[resolution_idx] == NOT_A_BUG:
             continue
         else:
-            stage_col.append(row_data[stage_idx])
-            severity_col.append(row_data[severity_idx])
-            resolution_col.append(row_data[resolution_idx])
-            owner_col.append(getFirstName(row_data[owner_idx]))
-            module_col.append(getModule(row_data[title_idx]))
-            start_time_col.append(getDateStr(row_data[start_time_idx],bk))
-            solved_time_col.append(getDateStr(row_data[solved_time_idx],bk))
+            if stage_idx:
+                stage_col.append(row_data[stage_idx])
+            if severity_idx:
+                severity_col.append(row_data[severity_idx])
+            if resolution_idx:
+                resolution_col.append(row_data[resolution_idx])
+            if owner_idx:
+                owner_col.append(getFirstName(row_data[owner_idx]))
+            if title_idx:
+                module_col.append(getModule(row_data[title_idx]))
+            if start_time_idx and solved_time_idx:
+                start_time_col.append(getDateStr(row_data[start_time_idx],bk))
+                solved_time_col.append(getDateStr(row_data[solved_time_idx],bk))
     book = xlwt.Workbook()
     comXlwt(book,countCol(stage_col),STAGE)
     comXlwt(book,countCol(severity_col),SEVERITY)
