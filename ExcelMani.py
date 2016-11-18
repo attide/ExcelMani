@@ -20,6 +20,7 @@ OWNER = u'负责人'
 START_TIME = u'创建时间'
 SOLVED_TIME = u'解决时间'
 TITLE = u'标题'
+BUG_TYPE = u'Bug类型'
 
 DISTRIBUTION = u'每日分布'
 MODULE_DIS = u'模块分布'
@@ -143,6 +144,7 @@ def main(file_name):
     start_time_idx = getIdx(first_row, START_TIME)
     solved_time_idx = getIdx(first_row, SOLVED_TIME)
     title_idx = getIdx(first_row,TITLE)
+    bug_type_idx = getIdx(first_row,BUG_TYPE)
     stage_col = []
     severity_col = []
     resolution_col = []
@@ -150,6 +152,7 @@ def main(file_name):
     start_time_col = []
     solved_time_col = []
     module_col = []
+    bug_type_col = []
     for i in range(1,nrows):
         row_data = sh.row_values(i)
         if row_data[resolution_idx] == NOT_A_BUG:
@@ -165,6 +168,8 @@ def main(file_name):
                 owner_col.append(getFirstName(row_data[owner_idx]))
             if title_idx:
                 module_col.append(getModule(row_data[title_idx]))
+            if bug_type_idx:
+                bug_type_col.append(row_data[bug_type_idx])
             if start_time_idx and solved_time_idx:
                 start_time_col.append(getDateStr(row_data[start_time_idx],bk))
                 solved_time_col.append(getDateStr(row_data[solved_time_idx],bk))
@@ -174,6 +179,7 @@ def main(file_name):
     comXlwt(book,countCol(resolution_col),RESOLUTION)
     comXlwt(book,countCol(owner_col),OWNER)
     comXlwt(book,countCol(module_col),MODULE_DIS)
+    comXlwt(book,countCol(bug_type_col),BUG_TYPE)
     dateXlwt(book,mergeDate(start_time_col,solved_time_col),DISTRIBUTION)
     book.save(OUTPUT_XLS)
 
