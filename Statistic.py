@@ -71,6 +71,11 @@ def getDatetimeVal(datetime_num,filename):
     datetime_value = xldate_as_tuple(datetime_num,bk.datemode)
     return datetime(*datetime_value)
 
+def getFirstName(name_data):
+    name_list = re.split(r'\,+', name_data)
+    first_name = re.split(r'\(', name_list[0])[0]
+    return first_name
+
 def resXlwt(result_list_p01,result_list_p23):
     book = xlwt.Workbook()
     if(result_list_p01 is None):
@@ -128,13 +133,13 @@ def main(file_name):
         time_diff_val = (end_time_val-start_time_val).total_seconds()/(60*60)
         if (row_i[priority_idx] in (P2_PRIORITY,P3_PRIORITY) and time_diff_val >= 24):
         # if True:
-            res_row = [row_i[bug_id_idx],row_i[title_idx],row_i[owner_idx],row_i[priority_idx],
+            res_row = [row_i[bug_id_idx],row_i[title_idx],getFirstName(row_i[owner_idx]),row_i[priority_idx],
                 str(start_time_val),
                 str(end_time_val),
                 int(time_diff_val)]
             result_list_p23.append(res_row)
         if (row_i[priority_idx] in (P0_PRIORITY,P1_PRIORITY) and time_diff_val >= 8):
-            res_row = [row_i[bug_id_idx],row_i[title_idx],row_i[owner_idx],row_i[priority_idx],
+            res_row = [row_i[bug_id_idx],row_i[title_idx],getFirstName(row_i[owner_idx]),row_i[priority_idx],
                 str(start_time_val),
                 str(end_time_val),
                 int(time_diff_val)]

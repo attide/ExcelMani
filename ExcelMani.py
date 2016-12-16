@@ -26,6 +26,7 @@ DISTRIBUTION = u'每日分布'
 MODULE_DIS = u'模块分布'
 
 NOT_A_BUG = u'Not a Bug'
+EXTERNAL = u'External'
 
 OUTPUT_XLS = 'v3_res.xls'
 
@@ -36,6 +37,11 @@ def getIdx(first_row,key):
         print '\'', key ,'\' not in subtitle'
         return
     return target_index
+
+def isExternal(stage_data,resolution_data):
+	if resolution_data == EXTERNAL:
+		return EXTERNAL
+	return stage_data
 
 def getFirstName(name_data):
     name_list = re.split(r'\,+', name_data)
@@ -159,7 +165,7 @@ def main(file_name):
             continue
         else:
             if stage_idx:
-                stage_col.append(row_data[stage_idx])
+                stage_col.append(isExternal(row_data[stage_idx],row_data[resolution_idx]))
             if severity_idx:
                 severity_col.append(row_data[severity_idx])
             if resolution_idx:
