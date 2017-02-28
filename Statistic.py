@@ -147,6 +147,7 @@ def main(file_name):
     resXlwt(result_list_p01,result_list_p23)
 
 if __name__ == '__main__':
+	# 需要一个参数（同目录下的待处理文件）
     args = sys.argv
     if len(args) == 2:
         file_name = args[1].decode('utf-8')

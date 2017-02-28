@@ -190,6 +190,7 @@ def main(file_name):
     book.save(OUTPUT_XLS)
 
 if __name__ == '__main__':
+	# 需要一个参数（同目录下的待处理文件）
     args = sys.argv
     if len(args) == 2:
         # print args[1]
